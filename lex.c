@@ -1,71 +1,56 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "lex.h"
 
 
 
-typedef enum TokenType {
-	EOF_TOKEN = -1,
-	NEWLINE = 0,
-	NUMBER = 1,
-	IDENT = 2,
-	STRING = 3,
-
-	// keyword
-	PRINT = 103,
-	IF = 106,
-	THEN = 107,
-	REPEAT = 109,
-	WHILE = 110,
-	ENDIF = 111,
-	ENDWHILE = 112,
-
-	// Operators
-	MINUS = 201,
-	PLUS = 202,
-	ASTERISK = 203,
-	SLASH = 204,
-	EQ = 205,
-	EQEQ = 206,
-	LT = 207,
-	LTEQ = 208,
-	GT = 209,
-	GTEQ = 201,
-	NOTEQ = 211,
-}
-
-struct Token {
-	char* text;
-	enum TokenType type;
+Lexer* create_lexer(char *input) {
+	struct Lexer *lexer = malloc(sizeof(struct Lexer));
+	lexer->source = input;
+	lexer->curChar = '\0';
+	lexer->curPos = -1;
+	lexer->nextChar = &nextChar;
+	lexer->peek = &peek;
+	lexer->nextChar(lexer);
+	return lexer;
 }
 
 
-typedef struct Lexer {
-	char* source;
-	char curChar;
-	int curPos;
+void nextChar(struct Lexer* lexer) {
+	lexer->curPos = lexer->curPos + 1;
+	if (lexer->curPos >= strlen(lexer->source)) {
+		lexer->curChar = '\0';		
+	} else {
+		lexer->curChar = lexer->source[lexer->curPos];
+	}
+}	
+
+char peek(struct Lexer* lexer) {
+	if(lexer->curPos + 1 >= strlen(lexer->source)){
+		return '\0';
+	}
+	return lexer->source[lexer->curPos + 1];
+}
+
+void abort_lex(struct Lexer* lexer) {
 	
-	// Advance to the next char
-	void (*nextChar)(struct Lexer*);
+}
+
+void skipWhiteSpace(struct Lexer* lexer) {
+
+}
+
+void skipComment(struct Lexer* lexer) {
+
+}
+
+Token getToken(struct Lexer* lexer) {
 	
-	// Return the lookeahead char
-	char (*peek)(struct Lexer*);
+}
 
-	// Invalid token found, print error and exit
-	void (*abort)(struct Lexer*);
+TokenType checkIfKeyword(char tokenText) {
 
-	//skip whitespaces except newline, which we will use to indicate the end of the statement
-	void (*abort)(struct Lexer*);
-
-	//skip comment in the code
-	void (*skipComment)(struct Lexer*);
-
-	// Return the next token
-	char (*getToken)(struct Lexer*);
-} Lexer;
-
-
-typedef struct Token {
-	TokenType (*checkIfKeyword)(struct Lexer*) 
-} Token
+}
 
 
