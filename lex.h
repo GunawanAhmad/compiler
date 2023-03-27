@@ -35,7 +35,7 @@ typedef enum TokenType {
 typedef struct Token {
 	char* text;
 	enum TokenType type;
-	enum TokenType (*checkIfKeywoard)(char);
+	enum TokenType (*checkIfKeyword)(char);
 } Token;
 
 typedef struct Lexer{
@@ -69,5 +69,9 @@ Lexer* create_lexer(char* input);
 void nextChar(Lexer* lexer);
 
 char peek(Lexer* lexer);
+
+Token getToken(Lexer *lexer);
+
+Token create_token(char *text, TokenType type);
 
 #endif

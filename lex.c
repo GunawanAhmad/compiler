@@ -12,8 +12,22 @@ Lexer* create_lexer(char *input) {
 	lexer->curPos = -1;
 	lexer->nextChar = &nextChar;
 	lexer->peek = &peek;
+	lexer->getToken = &getToken;
 	lexer->nextChar(lexer);
 	return lexer;
+}
+
+TokenType checkIfKeyword(char tokenText) {
+
+}
+
+
+Token create_token(char *text, TokenType type) {
+	struct Token token;
+	token.text = text;
+	token.type = type;
+	token.checkIfKeyword = &checkIfKeyword;
+	return token;
 }
 
 
@@ -46,11 +60,18 @@ void skipComment(struct Lexer* lexer) {
 }
 
 Token getToken(struct Lexer* lexer) {
+	Token token;
+	if(lexer->curChar == '+') {
+		token = create_token(lexer->curChar, PLUS); 
+	} else if(lexer->curChar == '-') {
+		token = create_token(lexer->curChar, MINUS);
+	} else {
+		token = create_token(lexer->curChar,IF); 
+	}
 	
+	lexer->nextChar(lexer);
+	return token;
 }
 
-TokenType checkIfKeyword(char tokenText) {
-
-}
 
 
