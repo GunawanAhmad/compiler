@@ -13,6 +13,7 @@ Lexer* create_lexer(char *input) {
 	lexer->nextChar = &nextChar;
 	lexer->peek = &peek;
 	lexer->getToken = &getToken;
+	lexer->abort_lex = &abort_lex;
 	lexer->nextChar(lexer);
 	return lexer;
 }
@@ -48,7 +49,9 @@ char peek(struct Lexer* lexer) {
 }
 
 void abort_lex(struct Lexer* lexer) {
-	
+	char str[20] = "ERROR";
+	printf("%s", str);
+	exit(1);	
 }
 
 void skipWhiteSpace(struct Lexer* lexer) {
@@ -65,8 +68,54 @@ Token getToken(struct Lexer* lexer) {
 		token = create_token(lexer->curChar, PLUS); 
 	} else if(lexer->curChar == '-') {
 		token = create_token(lexer->curChar, MINUS);
-	} else {
-		token = create_token(lexer->curChar,IF); 
+	} else if (lexer->curChar == '/'){
+		token = create_token(lexer->curChar, SLASH); 
+	} else if(lexer->curChar == '*') {
+		token = create_token(lexer->curChar, ASTERISK);
+	} else if(lexer->curChar == '\n') {
+		token = create_token(lexer->curChar, NEWLINE);
+	} else if(lexer->curChar == '\0') {
+		token = create_token(lexer->curChar, EOF_TOKEN);
+	} else if(lexer->curChar == '=') {
+		if(lexer->peek(lexer) == '=') {
+			char result[2];
+			result[0] = lexer->curChar;
+			lexer->nextChar(lexer);
+			result[1] = lexer->curChar;
+			token = create_token(result, EQEQ);
+		} else {
+			token = create_token(lexer->curChar, EQ);
+		}
+	} else if(lexer->curChar == '<') {
+		if(lexer->peek(lexer) == '=') {
+			char result[2];
+			result[0] = lexer->curChar;
+			lexer->nextChar(lexer);
+			result[1] = lexer->curChar;
+			token = create_token(result, LTEQ);
+		} else {
+			token = create_token(lexer->curChar, LT);
+		}
+	} else if(lexer->curChar == '>') {
+		if(lexer->peek(lexer) == '=') {
+			char result[2];
+			result[0] = lexer->curChar;
+			lexer->nextChar(lexer);
+			result[1] = lexer->curChar;
+			token = create_token(result, GTEQ);
+		} else {
+			token = create_token(lexer->curChar, GT);
+		}
+	} else if(lexer->curChar == '!') {
+		if(lexer->peek(lexer) == '=') {
+			char result[2];
+			result[0] = lexer->curChar;
+			lexer->nextChar(lexer);
+			result[1] = lexer->curChar;
+			token = create_token(result, NOTEQ);
+		} else {
+			lexer->abort_lex(lexer);
+		}
 	}
 	
 	lexer->nextChar(lexer);

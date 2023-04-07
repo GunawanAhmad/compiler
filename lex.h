@@ -74,4 +74,6 @@ Token getToken(Lexer *lexer);
 
 Token create_token(char *text, TokenType type);
 
+void abort_lex(Lexer* lexer);
+
 #endif

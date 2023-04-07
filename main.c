@@ -4,11 +4,11 @@
 
 
 int main() {
-	char *input = "-+IF";
+	char *input = "-+<===!<";
 	Lexer* lexer = create_lexer(input);
 	Token token;
 	while (lexer->curChar != '\0') {
-		printf("%c ", lexer->curChar);	
+		printf("%c", lexer->curChar);	
 		token = lexer->getToken(lexer);
 		printf("%d", token.type);
 	}
