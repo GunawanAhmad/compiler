@@ -55,14 +55,22 @@ void abort_lex(struct Lexer* lexer) {
 }
 
 void skipWhiteSpace(struct Lexer* lexer) {
-
+	while(lexer->curChar == ' ' || lexer->curChar == '\t' || lexer->curChar == '\r') {
+		lexer->nextChar(lexer);
+	}
 }
 
 void skipComment(struct Lexer* lexer) {
-
+	if (lexer->curChar == '#') {
+		while(lexer->curChar != '\n') {
+			lexer->nextChar(lexer);
+		}
+	}
 }
 
 Token getToken(struct Lexer* lexer) {
+	skipWhiteSpace(lexer);
+	skipComment(lexer);
 	Token token;
 	if(lexer->curChar == '+') {
 		token = create_token(lexer->curChar, PLUS); 
