@@ -4,15 +4,13 @@
 
 
 int main() {
-	char *input = "-+<===!<";
+	char *input = "-+<===!=\"halo\"";
 	Lexer* lexer = create_lexer(input);
 	Token token;
 	while (lexer->curChar != '\0') {
-		printf("%c", lexer->curChar);	
+		printf("%c", lexer->curChar);
 		token = lexer->getToken(lexer);
 		printf("%d", token.type);
 	}
-
 	return 0;
-
 }

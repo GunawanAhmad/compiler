@@ -124,6 +124,26 @@ Token getToken(struct Lexer* lexer) {
 		} else {
 			lexer->abort_lex(lexer);
 		}
+	} else if(lexer->curChar == '\"') {
+		lexer->nextChar(lexer);
+		int index = 0;
+		int capacity = 10;
+		char *stringValue = (char*) malloc(capacity * sizeof(char));
+
+		while(lexer->curChar != '\"') {
+			if(lexer->curChar == '\r' || lexer->curChar == '\t' || lexer->curChar == '\n') {
+				lexer->abort_lex(lexer);
+			}
+			if(index >= capacity - 1) {
+				capacity = capacity * 2;
+				char* temp = realloc(stringValue, capacity * sizeof(char));
+				stringValue = temp;
+			}
+			printf("%c\n", lexer->curChar);
+			lexer->nextChar(lexer);
+		}
+
+		token = create_token(stringValue, STRING);
 	}
 	
 	lexer->nextChar(lexer);
