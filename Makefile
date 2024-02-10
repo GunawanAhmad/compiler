@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra
 
 # Executable name
-TARGET = compiler.out
+TARGET = compiler.o
 
 # Source files
 SRCS = lex.c main.c
