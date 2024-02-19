@@ -1,28 +1,19 @@
-# Compiler and flags
-CC = gcc
-CFLAGS = -Wall -Wextra
+# -*- Makefile -*-
 
-# Executable name
-TARGET = compiler.o
+.PHONY: clean
 
-# Source files
-SRCS = lex.c main.c
+# Target: dependencies
+#	action
 
-# Object files
-OBJS = $(SRCS:.c=.o)
+compiler: lex.o main.o
+	gcc lex.o main.o -o compiler
 
-# Default target
-all: $(TARGET)
+lex.o: lex.c
+	gcc -c lex.c
 
-# Build target
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+main.o: main.c
+	gcc -c main.c
 
-# Run the executable
-run: $(TARGET)
-	./$(TARGET)
-
-# Clean target
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f *.o compiler
 
