@@ -34,32 +34,12 @@ typedef enum TokenType {
 typedef struct Token {
   char *text;
   enum TokenType type;
-  enum TokenType (*checkIfKeyword)(char);
 } Token;
 
 typedef struct Lexer {
   char *source;
   char curChar;
   int curPos;
-
-  // Advance to the next char
-  void (*nextChar)(struct Lexer *);
-
-  // Return the lookeahead char
-  char (*peek)(struct Lexer *);
-
-  // Invalid token found, print error and exit
-  void (*abort_lex)(struct Lexer *);
-
-  // skip whitespaces except newline, which we will use to indicate the end of
-  // the statement
-  void (*whiteSpace)(struct Lexer *);
-
-  // skip comment in the code
-  void (*skipComment)(struct Lexer *);
-
-  // Return the next token
-  struct Token (*getToken)(struct Lexer *);
 } Lexer;
 
 Lexer *create_lexer(char *input);
@@ -68,9 +48,9 @@ void nextChar(Lexer *lexer);
 
 char peek(Lexer *lexer);
 
-Token getToken(Lexer *lexer);
+Token *getToken(Lexer *lexer);
 
-Token create_token(char *text, TokenType type);
+Token *create_token(char *text, TokenType type);
 
 void abort_lex(Lexer *lexer);
 

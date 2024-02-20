@@ -15,6 +15,7 @@
 #include "parser.h"
 #include "lex.h"
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 Parser *createParser(Lexer *lexer) {
@@ -31,4 +32,17 @@ bool checkToken(Parser *parser, Token token) {
 
 bool checkPeek(Parser *parser, Token token) {
   return token.type == parser->peekToken->type;
+}
+
+void nextToken(Parser *parser) {
+  parser->currToken = parser->peekToken;
+  parser->peekToken = getToken(parser->lexer);
+} 
+
+void match(Parser *parser, Token token) {
+  if(!checkToken(parser, token)) {
+    printf("%s", "Error");
+  } else {
+    nextToken(parser);
+  }
 }

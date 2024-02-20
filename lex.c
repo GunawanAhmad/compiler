@@ -10,11 +10,7 @@ Lexer *create_lexer(char *input) {
   lexer->source = input;
   lexer->curChar = '\0';
   lexer->curPos = -1;
-  lexer->nextChar = &nextChar;
-  lexer->peek = &peek;
-  lexer->getToken = &getToken;
-  lexer->abort_lex = &abort_lex;
-  lexer->nextChar(lexer);
+  nextChar(lexer);
   return lexer;
 }
 
@@ -37,10 +33,10 @@ TokenType checkIfKeyword(char *tokenText) {
   }
 }
 
-Token create_token(char *text, TokenType type) {
-  struct Token token;
-  token.text = text;
-  token.type = type;
+Token* create_token(char *text, TokenType type) {
+  struct Token *token = (Token*)malloc(sizeof(Token));
+  token->text = text;
+  token->type = type;
   return token;
 }
 
@@ -69,112 +65,85 @@ void abort_lex(struct Lexer *lexer) {
 void skipWhiteSpace(struct Lexer *lexer) {
   while (lexer->curChar == ' ' || lexer->curChar == '\t' ||
          lexer->curChar == '\r') {
-    lexer->nextChar(lexer);
+    nextChar(lexer);
   }
 }
 
 void skipComment(struct Lexer *lexer) {
   if (lexer->curChar == '#') {
     while (lexer->curChar != '\n') {
-      lexer->nextChar(lexer);
+      nextChar(lexer);
     }
   }
 }
 
-Token getToken(struct Lexer *lexer) {
+Token *getToken(struct Lexer *lexer) {
   skipWhiteSpace(lexer);
   skipComment(lexer);
-  Token token;
+  Token *token;
   if (lexer->curChar == '+') {
-    char ch = lexer->curChar;
-    char str[2];
-    str[0] = ch;
-    str[1] = '\0';
+    char *str = "+";
     token = create_token(str, PLUS);
   } else if (lexer->curChar == '-') {
-    char ch = lexer->curChar;
-    char str[2];
-    str[0] = ch;
-    str[1] = '\0';
+    char *str = "-";
     token = create_token(str, MINUS);
   } else if (lexer->curChar == '/') {
-    char ch = lexer->curChar;
-    char str[2];
-    str[0] = ch;
-    str[1] = '\0';
+    char *str = "/";
     token = create_token(str, SLASH);
   } else if (lexer->curChar == '*') {
-    char ch = lexer->curChar;
-    char str[2];
-    str[0] = ch;
-    str[1] = '\0';
+    char *str = "*";
     token = create_token(str, ASTERISK);
   } else if (lexer->curChar == '\n') {
-    char ch = lexer->curChar;
-    char str[2];
-    str[0] = ch;
-    str[1] = '\0';
+    char *str = "\n";
     token = create_token(str, NEWLINE);
   } else if (lexer->curChar == '\0') {
-    char ch = lexer->curChar;
-    char str[2];
-    str[0] = ch;
-    str[1] = '\0';
+    char *str = "\0";
     token = create_token(str, EOF_TOKEN);
   } else if (lexer->curChar == '=') {
-    if (lexer->peek(lexer) == '=') {
-      char result[2];
+    if (peek(lexer) == '=') {
+      char *result = (char*)malloc(sizeof(char) * 2);
       result[0] = lexer->curChar;
-      lexer->nextChar(lexer);
+      nextChar(lexer);
       result[1] = lexer->curChar;
       token = create_token(result, EQEQ);
     } else {
-      char ch = lexer->curChar;
-      char str[2];
-      str[0] = ch;
-      str[1] = '\0';
+      char *str = "=";
       token = create_token(str, EQ);
     }
   } else if (lexer->curChar == '<') {
-    if (lexer->peek(lexer) == '=') {
-      char result[2];
+    if (peek(lexer) == '=') {
+      char *result = (char*)malloc(sizeof(char) * 2);
       result[0] = lexer->curChar;
-      lexer->nextChar(lexer);
+      nextChar(lexer);
       result[1] = lexer->curChar;
       token = create_token(result, LTEQ);
     } else {
-      char ch = lexer->curChar;
-      char str[2];
-      str[0] = ch;
-      str[1] = '\0';
+      char *str = "<";
       token = create_token(str, LT);
     }
   } else if (lexer->curChar == '>') {
-    if (lexer->peek(lexer) == '=') {
-      char result[2];
+    if (peek(lexer) == '=') {
+      char *result = (char*)malloc(sizeof(char) * 2);
       result[0] = lexer->curChar;
-      lexer->nextChar(lexer);
+      nextChar(lexer);
       result[1] = lexer->curChar;
       token = create_token(result, GTEQ);
     } else {
-      char ch = lexer->curChar;
-      char str[2];
-      str[0] = ch;
-      str[1] = '\0';
+      char *str = ">";
       token = create_token(str, GT);
     }
   } else if (lexer->curChar == '!') {
-    if (lexer->peek(lexer) == '=') {
-      char result[2];
+    if (peek(lexer) == '=') {
+      char *result = (char*)malloc(sizeof(char) * 2);
       result[0] = lexer->curChar;
-      lexer->nextChar(lexer);
+      nextChar(lexer);
       result[1] = lexer->curChar;
       token = create_token(result, NOTEQ);
     } else {
-      lexer->abort_lex(lexer);
+      abort_lex(lexer);
     }
   } else if (lexer->curChar == '\"') {
-    lexer->nextChar(lexer);
+    nextChar(lexer);
     int index = 0;
     int capacity = 10;
     char *stringValue = (char *)malloc(capacity * sizeof(char));
@@ -182,7 +151,7 @@ Token getToken(struct Lexer *lexer) {
     while (lexer->curChar != '\"') {
       if (lexer->curChar == '\r' || lexer->curChar == '\t' ||
           lexer->curChar == '\n') {
-        lexer->abort_lex(lexer);
+        abort_lex(lexer);
       }
       if (index >= capacity - 1) {
         capacity = capacity * 2;
@@ -190,7 +159,7 @@ Token getToken(struct Lexer *lexer) {
         stringValue = temp;
       }
       printf("%c\n", lexer->curChar);
-      lexer->nextChar(lexer);
+      nextChar(lexer);
     }
     token = create_token(stringValue, STRING);
   } else if (isalpha(lexer->curChar)) {
@@ -211,6 +180,6 @@ Token getToken(struct Lexer *lexer) {
     TokenType type = checkIfKeyword(tokText);
     token = create_token(tokText, type);
   }
-  lexer->nextChar(lexer);
+  nextChar(lexer);
   return token;
 }
