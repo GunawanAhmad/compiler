@@ -179,6 +179,20 @@ Token *getToken(struct Lexer *lexer) {
 
     TokenType type = checkIfKeyword(tokText);
     token = create_token(tokText, type);
+  } else if(isdigit(lexer->curChar)) {
+    int startPos = lexer->curPos;
+    int capacity = 1;
+    int index = 0;
+    char *tokText = (char*)malloc(sizeof(char) * capacity);
+    tokText[index] = lexer->curChar;
+    while(isdigit(peek(lexer))) {
+      nextChar(lexer);
+      capacity++;
+      tokText = realloc(tokText, sizeof(char) * capacity);
+      index++;
+      tokText[index] = lexer->curChar;
+    }
+    token = create_token(tokText, NUMBER);
   }
   nextChar(lexer);
   return token;
