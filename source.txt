@@ -1,4 +1,3 @@
-+-=<= Gunawan    
+PRINT "HELLO WORLD"
+PRINT 123
 
-
-123   < >

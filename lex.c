@@ -158,7 +158,6 @@ Token *getToken(struct Lexer *lexer) {
         char *temp = realloc(stringValue, capacity * sizeof(char));
         stringValue = temp;
       }
-      printf("%c\n", lexer->curChar);
       nextChar(lexer);
     }
     token = create_token(stringValue, STRING);

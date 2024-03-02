@@ -11,11 +11,20 @@ typedef struct Parser {
 
 Parser *createParser(Lexer *lexer);
 
-bool checkToken(Parser *parser, Token token);
+bool checkToken(Parser *parser, int tokenType);
 
-bool checkPeek(Parser *parser, Token token);
+bool checkPeek(Parser *parser, int tokenType);
 
-void match(Parser *parser, Token token);
+void match(Parser *parser, int tokenType);
 
 void nextToken(Parser *parser);
+
+void program(Parser *parser);
+
+void statement(Parser *parser);
+
+void expression(Parser *parser);
+
+void newline(Parser *parser);
+
 #endif // !PARSER_H
