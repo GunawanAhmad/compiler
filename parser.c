@@ -7,9 +7,12 @@
  *    | "IF" comparison "THEN" nl {statement} "ENDIF" nl
  *    | "WHILE" comparison "REPEAT" nl {statement} "ENDWHILE" nl
  * comparison ::= expression (("==" | "!=" | "<" | ">" | "<=" | ">=")
- * expression) + expression  ::= term {("-" | "+") term} term ::= unary {("/" |
- * "*") unary} unary ::= ["+" | "-"] primary primary ::= number | ident nl ::=
- * '\n' +
+ * expression)+ 
+ * expression  ::= term {("-" | "+") term} 
+ * term ::= unary {("/" | "*") unary} 
+ * unary ::= ["+" | "-"] primary 
+ * primary ::= number | ident 
+ * nl ::= '\n'+
  * */
 
 #include "parser.h"
@@ -68,6 +71,19 @@ void statement(Parser *parser) {
       expression(parser);
       nextToken(parser);
     }
+  } else if(checkToken(parser, IF)) {
+    nextToken(parser);
+    comparison(parser);
+
+    match(parser, THEN);
+
+    newline(parser);
+
+    while (!checkToken(parser, ENDIF)) {
+      statement(parser);
+    }
+
+    match(parser, ENDIF);
   }
 
   newline(parser);
@@ -75,6 +91,20 @@ void statement(Parser *parser) {
 
 void expression(Parser *parser) {
   puts("Expresion\n");
+}
+
+void comparison(Parser *parser) {
+  puts("Comparision\n");
+}
+
+void unary(Parser *parser) {
+
+}
+
+void primary(Parser *parser) {
+}
+
+void term(Parser *parser) {
 }
 
 void newline(Parser *parser) {

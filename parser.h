@@ -25,6 +25,14 @@ void statement(Parser *parser);
 
 void expression(Parser *parser);
 
+void comparison(Parser *parser);
+
+void term(Parser *parser);
+
+void unary(Parser *parser);
+
+void primary(Parser *parser);
+
 void newline(Parser *parser);
 
 #endif // !PARSER_H
