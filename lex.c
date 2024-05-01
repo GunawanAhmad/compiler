@@ -28,6 +28,8 @@ TokenType checkIfKeyword(char *tokenText) {
     return ENDWHILE;
   } else if (!strcmp(tokenText, "ENDIF")) {
     return ENDIF;
+  } else if(!strcmp(tokenText, "LET")) {
+    return LET;
   } else {
     return IDENT;
   }

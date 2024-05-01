@@ -16,6 +16,7 @@ typedef enum TokenType {
   WHILE = 110,
   ENDIF = 111,
   ENDWHILE = 112,
+  LET = 113,
 
   // Operators
   MINUS = 201,

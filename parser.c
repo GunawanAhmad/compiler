@@ -55,6 +55,10 @@ void match(Parser *parser, int tokenType) {
 void program(Parser *parser) {
   puts("Program\n");
 
+  while(checkToken(parser, NEWLINE)) {
+    nextToken(parser);
+  }
+
   while (!checkToken(parser, EOF_TOKEN)) {
     statement(parser);
   }
@@ -78,12 +82,31 @@ void statement(Parser *parser) {
     match(parser, THEN);
 
     newline(parser);
-
     while (!checkToken(parser, ENDIF)) {
       statement(parser);
     }
 
     match(parser, ENDIF);
+  } else if(checkToken(parser, WHILE)) {
+    puts("While statement");
+    nextToken(parser);
+    comparison(parser);
+    match(parser, REPEAT);
+    newline(parser);
+
+    while (!checkToken(parser, ENDWHILE)) {
+      statement(parser);
+    }
+
+    match(parser, ENDWHILE);
+  } else if(checkToken(parser, LET)) {
+    puts("Let statement");
+    nextToken(parser);
+    match(parser, EQ);
+    match(parser, IDENT);
+  } else {
+    puts("Syntax error");
+    exit(1);
   }
 
   newline(parser);
@@ -91,6 +114,7 @@ void statement(Parser *parser) {
 
 void expression(Parser *parser) {
   puts("Expresion\n");
+  
 }
 
 void comparison(Parser *parser) {
