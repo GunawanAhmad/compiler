@@ -35,4 +35,6 @@ void primary(Parser *parser);
 
 void newline(Parser *parser);
 
+bool isComparisonOperator(Parser *parser);
+
 #endif // !PARSER_H

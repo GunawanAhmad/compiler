@@ -119,6 +119,19 @@ void expression(Parser *parser) {
 
 void comparison(Parser *parser) {
   puts("Comparision\n");
+
+  expression(parser);
+  if(isComparisonOperator(parser)) {
+    nextToken(parser);
+    expression(parser);
+  } else {
+    exit(1);
+  }
+
+  while(isComparisonOperator(parser)) {
+    nextToken(parser);
+    expression(parser);
+  }
 }
 
 void unary(Parser *parser) {
@@ -138,4 +151,8 @@ void newline(Parser *parser) {
   while(checkToken(parser, NEWLINE)) {
     nextToken(parser);
   }
+}
+
+bool isComparisonOperator(Parser *parser) {
+  return checkToken(parser, GT) || checkToken(parser, GTEQ) || checkToken(parser, LT) || checkToken(parser, LTEQ) || checkToken(parser, EQEQ);
 }
